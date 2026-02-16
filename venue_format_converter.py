@@ -42,8 +42,8 @@ for i in range(len(lines)):
     elif searchString in lines[i]:
         # check if there is "tilatarkennus" or no... because the formatting is different if there is.
         if ".2024" in lines[i-2] or ".2025" in lines[i-2] or ".2026" in lines[i-2] or "MA\n" in lines[i-2] or "TI\n" in lines[i-2] or "KE\n" in lines[i-2] or "TO\n" in lines[i-2] or "PE\n" in lines[i-2] or "LA\n" in lines[i-2] or "SU\n" in lines[i-2]:
-            print(site + ";" + weekday + ";ei-tilatarkennusta;" + re.sub('\n', '', lines[i-1]) + ";" + re.sub('\n', '', lines[i]) + ";" + re.sub('\n', '', lines[i+1]))
+            print(site.encode('ansi').decode('utf-8') + ";" + weekday + ";ei-tilatarkennusta;" + re.sub('\n', '', lines[i-1]) + ";" + re.sub('\n', '', lines[i]) + ";" + re.sub('\n', '', lines[i+1]))
         else:
-            print(site + ";" + weekday + ";" + re.sub('\n', '', lines[i-2]) + ";" + re.sub('\n', '', lines[i-1]) + ";" + re.sub('\n', '', lines[i]) + ";" + re.sub('\n', '', lines[i+1]))
+            print(site.encode('ansi').decode('utf-8') + ";" + weekday + ";" + re.sub('\n', '', lines[i-2].encode('ansi').decode('utf-8')) + ";" + re.sub('\n', '', lines[i-1]) + ";" + re.sub('\n', '', lines[i]) + ";" + re.sub('\n', '', lines[i+1]))
 
 # At the end, you should have SEMICOLON separated format output in your terminal/console, that you can then copy paste to spreadsheet tool you like, i.e. Microsoft Excel.
