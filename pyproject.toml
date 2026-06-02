@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "varausmuunnin"
+version = "1.0.0"
+description = "Kouvolan urheilukenttien vakiovarausten muunnintyokalu"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["pdfplumber>=0.9"]
+xlsx = ["openpyxl>=3.1"]
+dev = ["pytest>=7.0", "ruff>=0.1"]
+
+[project.scripts]
+varausmuunnin = "varausmuunnin.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+src = ["src", "tests"]
+line-length = 100

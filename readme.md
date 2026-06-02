@@ -1,23 +1,99 @@
-# Kouvola liikuntapaikka - Vakiovuorot to Spreadsheet
+# Varausmuunnin
 
-So you got your club's sport venue reservations from City of Kouvola as unstructured PDF file and you want to search your club's resources only and work in spreadsheet format instead?
+Kouvolan kaupungin urheilukenttien vakiovarausten muunnintyokalu.
 
-So you got 150 pages like this...
-![example of PDF report](examples/screenshot_vakiovuorovaraus_pdf.png)
+Mie muunnan kaupungin vakiovaraus-PDF:n tai tekstidumpin CSV-, JSON-
+tai XLSX-muottiin. Sie saat varaukset kayttokelposeen taulukkomuottiin
+ilman mittaan sorkkimista.
 
-... that you want to turn in to this:
-![example of spreadsheet](examples/screenshot_spreadsheet_format.png)
+## Asennus
 
-Then follow these steps:
+```bash
+pip install -e .
+```
 
-1. Open the PDF file, select all text (ctrl + a in Windows, cmd + a in Mac)
-2. Copy the text to clipboard
-3. Paste the text as PLAIN TEXT to a file and save it as `vakiovuorot_dump.txt`.
-    - You can use Notedad or TextEdit to create the file to ensure it is plain text.
-4. Copy the Python `venue_format_converter.py` script to your machine, edit the `searchString` (defaults to `"KJP") to match your wanted search. For example "Kajo" or "Purha".
-5. Open your terminal and run the script
-6. Copy the output to your favorite spreadsheet tool, i.e. Microsoft Excel
-7. Move text to colums (separate by SEMICOLON (puolipiste in Finnish)) and filter as you like.
-8. Happy planning!
+PDF-tukee varte:
+```bash
+pip install -e ".[pdf]"
+```
 
-As the City of Kouvola might change the layout, do some checks between the output and original PDF to make sure it still works.
+XLSX-tukee varte:
+```bash
+pip install -e ".[xlsx]"
+```
+
+## Kaytto
+
+### Peruskaytto
+
+```bash
+varausmuunnin vakiovuorot_dump.txt -s KJP -f csv -o varaukset.csv
+```
+
+### Eri muodot
+
+CSV (oletus, puolipiste-erotin):
+```bash
+varausmuunnin vakiovuorot_dump.txt -s KJP -f csv -o kjp_varaukset.csv
+```
+
+JSON:
+```bash
+varausmuunnin vakiovuorot_dump.txt -s KJP -f json -o kjp_varaukset.json
+```
+
+XLSX (vaatii openpyxl-kirjaston):
+```bash
+varausmuunnin vakiovuorot_dump.txt -s KJP -f xlsx -o kjp_varaukset.xlsx
+```
+
+### Argumentit
+
+| Argumentti | Kuvaus |
+|---|---|
+| `tiedosto` | Syotetiedoston polku (.txt tai .pdf) |
+| `-s`, `--search` | Hakusana jolla suodatetaan varaukset (esim. KJP) |
+| `-f`, `--format` | Tulosteen muoto: csv, json tai xlsx (oletus: csv) |
+| `-o`, `--output` | Tulostiedoston polku (oletus: varaukset.<muoto>) |
+
+### Esimerkkeja
+
+Etitaan kaikki KJP:n varaukset:
+```bash
+python -m varausmuunnin examples/vakiovuorot_dump.txt -s KJP -f csv -o kjp.csv
+```
+
+Etitaan Purhan varaukset JSON-muodossa:
+```bash
+python -m varausmuunnin examples/vakiovuorot_dump.txt -s Purha -f json -o purha.json
+```
+
+## Miten dump-tiedosto tehaan
+
+1. Avaa kaupungin vakiovaraus-PDF
+2. Valite kaikki teksti (Ctrl+A)
+3. Kopioi leikepoyalle (Ctrl+C)
+4. Liita PLAIN TEXT -muodossa tekstitiedostoon ja tallenna
+
+PDF-tuki toimii myos suoraan, mutta vaatii pdfplumber-kirjaston:
+```bash
+varausmuunnin "Vakiovuorot kesa 2024.pdf" -s KJP -f csv
+```
+
+## Vastuuvapauslauseke
+
+Tama tyokalu tarjotaan sellaisenaan ilman mittaan takuuta. Mie en vastaa
+mistaan virheista tai puutteista tulosteessa. Sie oot itte vastuussa siita
+etta tarkistat tulokset ja vertaat alkuperaseen PDF-tiedostoon enneku
+kaytat niita mihinkaan. Kouvolan kaupunki voi muuttaa PDF:n muottii
+milloin vaan, jolloin parseri ei valttamatta toimi oikein.
+
+Tarkista aina tuloste alkuperasta PDF:aa vasten!
+
+## Kehitys
+
+```bash
+pip install -e ".[dev]"
+pytest tests/ -v
+ruff check src/ tests/
+```

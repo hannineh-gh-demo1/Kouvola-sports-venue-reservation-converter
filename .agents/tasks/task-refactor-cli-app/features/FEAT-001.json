@@ -1,0 +1,41 @@
+{
+  "id": "FEAT-001",
+  "type": "refactor",
+  "description": "Create the complete production-quality Python CLI application structure with proper project layout, robust regex-based parser, CLI interface, multiple output formats, and unit tests. This is the main refactoring feature that transforms the brittle 49-line script into a modular, well-structured application.",
+  "status": "completed",
+  "steps": [
+    "Create pyproject.toml with project metadata, dependencies (argparse built-in, pdfplumber optional, openpyxl optional), dev dependencies (pytest, ruff), and console_scripts entry point pointing to src/varausmuunnin/cli.py:main",
+    "Create src/varausmuunnin/__init__.py with package version and brief description",
+    "Create src/varausmuunnin/parser.py - The core parser module. Must handle the dump.txt format which is a SINGLE LONG LINE of concatenated PDF text. Use regex to identify structural markers: 'Vakiovaraukset' + date pattern (\\d{2}\\.\\d{2}\\.\\d{4}), 'Kohde:' followed by venue name, weekday abbreviations (MA|TI|KE|TO|PE|LA|SU), time patterns (\\d{2}:\\d{2} - \\d{2}:\\d{2}), group names, and date ranges (\\d{2}\\.\\d{2}\\.\\d{4} - \\d{2}\\.\\d{2}\\.\\d{4}). Implement as a state machine or structured regex parser. Return list of Reservation dataclass objects with fields: tila (venue), viikonpaiva (weekday), tilatarkennus (location detail), kellonaika (time), ryhma (group), aikavali (date range). Include a filter_by_search function that filters results by search string.",
+    "Create src/varausmuunnin/pdf_reader.py - Module for direct PDF reading. Import pdfplumber with try/except ImportError to provide clear error message if not installed. Function read_pdf(path) -> str that extracts all text from PDF. Falls back gracefully.",
+    "Create src/varausmuunnin/output.py - Output formatting module. Support CSV (using csv module with semicolon delimiter to match original behavior), JSON (using json module), and XLSX (using openpyxl with try/except ImportError). Each format writes to a file path. CSV and JSON use only standard library.",
+    "Create src/varausmuunnin/cli.py - CLI interface using argparse. Arguments: input file path (positional), --search/-s for search string (required), --output/-o for output file path, --format/-f for output format (csv/json/xlsx, default csv). Include proper help text in Kouvola Finnish dialect. Handle errors with logging module instead of print statements. Detect if input is .pdf or .txt and route accordingly.",
+    "Create tests/__init__.py (empty)",
+    "Create tests/conftest.py with pytest fixtures that load examples/vakiovuorot_dump.txt as test data",
+    "Create tests/test_parser.py - Unit tests for the parser: test that it correctly identifies venues (Kohde), weekdays, time slots, groups, and date ranges from the fixture data. Test filtering by search string 'KJP'. Test that date detection uses regex pattern not hardcoded years. Test edge cases (missing tilatarkennus, page breaks with 'Vakiovaraukset' headers).",
+    "Create tests/test_output.py - Unit tests for output module: test CSV output format (semicolon separator, correct headers), test JSON output structure, test that XLSX gracefully handles missing openpyxl.",
+    "Create tests/test_cli.py - Integration tests for CLI: test argument parsing, test that --help works, test invalid input file gives proper error.",
+    "Remove the old venue_format_converter.py (or keep as reference in a legacy/ folder)",
+    "Update readme.md in Finnish with Kouvola dialect - document new CLI usage, installation instructions (pip install -e .), examples of running with different formats and search strings, mention optional PDF support requires pdfplumber"
+  ],
+  "acceptance_criteria": [
+    "Running 'ruff check src/ tests/' passes with no errors",
+    "Running 'pytest tests/ -v' passes all tests",
+    "The parser correctly extracts KJP reservations from examples/vakiovuorot_dump.txt with venue, weekday, time, group, and date range fields",
+    "CSV output uses semicolon separator and includes header row matching original format: Tila;viikonpaiva;Tilatarkennus;Klo;Ryhma;Aikavali",
+    "JSON output produces valid JSON array of reservation objects",
+    "CLI shows help text in Kouvola Finnish when run with --help",
+    "Date detection uses regex pattern (\\d{2}\\.\\d{2}\\.\\d{4}) instead of hardcoded year strings",
+    "All user-facing strings use Kouvola dialect Finnish",
+    "The old venue_format_converter.py is removed from root"
+  ],
+  "verification": [
+    "pyenv global 3.11.15 && ruff check src/ tests/",
+    "pytest tests/ -v",
+    "python -m varausmuunnin --help",
+    "python -m varausmuunnin examples/vakiovuorot_dump.txt -s KJP -f csv -o /tmp/test_output.csv && head -5 /tmp/test_output.csv",
+    "python -m varausmuunnin examples/vakiovuorot_dump.txt -s KJP -f json -o /tmp/test_output.json && python -c \"import json; data=json.load(open('/tmp/test_output.json')); print(f'Found {len(data)} reservations')\""
+  ],
+  "blocked_reason": null,
+  "findings": "Parser rewritten as line-by-line state machine. The dump file has 2106 newlines (wc -l shows 0 because no trailing newline, but split('\\n') gives 2107 lines). Parser finds 490 total reservations, 114 KJP matches. File format: Vakiovaraukset+date=page break, Kohde:+name+subvenue=venue, weekday on own line, then repeating blocks of [tilatarkennus]+time+group+daterange. PYTHONPATH=src needed to run without pip install. All 23 tests pass, ruff clean."
+}

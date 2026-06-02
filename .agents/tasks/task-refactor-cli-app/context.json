@@ -1,0 +1,21 @@
+{
+  "project_type": "Python CLI application - sports venue reservation PDF/text parser",
+  "language": "Python 3.11",
+  "build_system": "pyproject.toml (no build needed, pure Python)",
+  "test_framework": "pytest (available pre-installed)",
+  "build_command": "ruff check src/ tests/",
+  "test_command": "pytest tests/ -v",
+  "verification_instructions": "1. Run ruff check on all Python source files. 2. Run pytest on all tests. 3. Run the CLI with the example fixture file to verify output.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "pyenv global 3.11.15 - pytest and ruff are pre-installed",
+  "environment_constraints": "INTEGRATIONS_ONLY network - no pip install possible. Must use only standard library + pre-installed tools (pytest, ruff). External packages (pdfplumber, openpyxl, click) must be referenced in pyproject.toml but code using them should have graceful fallbacks or be structured so core functionality works without them. Tests must run with standard library only.",
+  "contribution_requirements": "All user-facing text (comments, docstrings, README, CLI help, error messages) must use Finnish language with Kouvola dialect/slang: mie/sie for mina/sina, myo/tyo for me/te, loppuheitto (dropping final vowels), doubled consonants, local vocabulary like mankua (itkea), sorkkia (sohia), pimia (pimea).",
+  "key_patterns": "Current script: line-by-line parsing with state tracking (site, weekday). Detects 'Kohde:' for venue, weekday abbreviations (MA/TI/KE/TO/PE/LA/SU), search string matches, and date patterns for context. The dump.txt file is actually a SINGLE LONG LINE with no newlines - all PDF text concatenated together. Parsing must use regex to split on structural markers (Vakiovaraukset, Kohde:, weekday abbreviations, time patterns, date patterns).",
+  "relevant_files": [
+    "venue_format_converter.py (original script to replace)",
+    "examples/vakiovuorot_dump.txt (test fixture - single long line of concatenated PDF text)",
+    "examples/Vakiovuorot kesa 2024.pdf (original PDF)",
+    "readme.md (needs rewrite in Kouvola Finnish)"
+  ],
+  "directory_structure": "Current: flat structure with venue_format_converter.py at root, examples/ folder with test data. Target: src/varausmuunnin/ package with cli.py, parser.py, output.py modules; tests/ directory; pyproject.toml; .github/workflows/"
+}

@@ -1,0 +1,29 @@
+name: Tarkistukset
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  testit-ja-tarkistukset:
+    name: Testit ja tarkistukset
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Asenna Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Asenna riippuvuudet
+        run: pip install ruff pytest
+
+      - name: Tarkista koodi (ruff)
+        run: ruff check src/ tests/
+
+      - name: Aja testit (pytest)
+        run: pytest tests/ -v
