@@ -102,16 +102,20 @@ def main() -> None:
     )
 
     # Kirjoita tuloste
-    if args.muoto == "csv":
-        kirjoita_csv(suodatetut, tuloste)
-    elif args.muoto == "json":
-        kirjoita_json(suodatetut, tuloste)
-    elif args.muoto == "xlsx":
-        try:
-            kirjoita_xlsx(suodatetut, tuloste)
-        except ImportError as e:
-            logger.error(str(e))
-            sys.exit(1)
+    try:
+        if args.muoto == "csv":
+            kirjoita_csv(suodatetut, tuloste)
+        elif args.muoto == "json":
+            kirjoita_json(suodatetut, tuloste)
+        elif args.muoto == "xlsx":
+            try:
+                kirjoita_xlsx(suodatetut, tuloste)
+            except ImportError as e:
+                logger.error(str(e))
+                sys.exit(1)
+    except OSError as e:
+        logger.error("Tulosteen kirjottaminen epaonnisttu: %s", e)
+        sys.exit(1)
 
     logger.info("Tuloste kirjotettu: %s", tuloste)
 

@@ -3,6 +3,7 @@
 Testataan argumenttien parsinta, --help ja virhetilanteet.
 """
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -15,7 +16,7 @@ def test_help_toimii():
         capture_output=True,
         text=True,
         cwd=str(Path(__file__).parent.parent),
-        env={"PYTHONPATH": str(Path(__file__).parent.parent / "src")},
+        env={**os.environ, "PYTHONPATH": str(Path(__file__).parent.parent / "src")},
     )
     assert tulos.returncode == 0
     assert "varausmuunnin" in tulos.stdout
@@ -29,7 +30,7 @@ def test_argumentit_puuttuu():
         capture_output=True,
         text=True,
         cwd=str(Path(__file__).parent.parent),
-        env={"PYTHONPATH": str(Path(__file__).parent.parent / "src")},
+        env={**os.environ, "PYTHONPATH": str(Path(__file__).parent.parent / "src")},
     )
     assert tulos.returncode != 0
 
@@ -41,7 +42,7 @@ def test_tiedostoa_ei_loydy():
         capture_output=True,
         text=True,
         cwd=str(Path(__file__).parent.parent),
-        env={"PYTHONPATH": str(Path(__file__).parent.parent / "src")},
+        env={**os.environ, "PYTHONPATH": str(Path(__file__).parent.parent / "src")},
     )
     assert tulos.returncode != 0
     assert "ei loydy" in tulos.stderr.lower() or "error" in tulos.stderr.lower()
@@ -60,7 +61,7 @@ def test_csv_tuloste_syntyy(tmp_path):
         capture_output=True,
         text=True,
         cwd=str(projekti),
-        env={"PYTHONPATH": str(projekti / "src")},
+        env={**os.environ, "PYTHONPATH": str(projekti / "src")},
     )
     assert tulos.returncode == 0
     assert tuloste.exists()

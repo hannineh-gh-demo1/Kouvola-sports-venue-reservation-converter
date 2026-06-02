@@ -6,6 +6,8 @@ Jos ei oo, antaa selkeen virheilmotuksen.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 
 def lue_pdf(polku: str) -> str:
     """Lukee PDF-tiedoston ja palauttaa tekstisisallon.
@@ -21,14 +23,14 @@ def lue_pdf(polku: str) -> str:
         FileNotFoundError: Jos tiedostoo ei loydy.
     """
     try:
-        import pdfplumber  # noqa: F401
+        import pdfplumber
     except ImportError:
         raise ImportError(
             "PDF-tukee varte pittaa asentaa pdfplumber: "
             "pip install varausmuunnin[pdf]"
         )
 
-    if not __import__("os").path.isfile(polku):
+    if not Path(polku).is_file():
         raise FileNotFoundError(f"Tiedostoo ei loydy: {polku}")
 
     with pdfplumber.open(polku) as pdf:
@@ -37,4 +39,4 @@ def lue_pdf(polku: str) -> str:
             teksti = sivu.extract_text()
             if teksti:
                 sivut.append(teksti)
-        return "".join(sivut)
+        return "\n".join(sivut)

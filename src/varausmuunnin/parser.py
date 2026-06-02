@@ -26,6 +26,9 @@ class Varaus:
 # Viikonpaivat
 VIIKONPAIVAT = {"MA", "TI", "KE", "TO", "PE", "LA", "SU"}
 
+# Sentinelli-arvo kun tilatarkennusta ei ole
+EI_TILATARKENNUSTA = "ei-tilatarkennusta"
+
 # Regex: aika-muoto HH:MM - HH:MM
 AIKA_RE = re.compile(r"^\d{2}:\d{2} - \d{2}:\d{2}$")
 
@@ -121,7 +124,7 @@ def parse_dump(teksti: str) -> list[Varaus]:
             kellonaika = rivi
             ryhma = ""
             aikavali = ""
-            tilatarkennus = "ei-tilatarkennusta"
+            tilatarkennus = EI_TILATARKENNUSTA
 
             i += 1
             if i < len(rivit):

@@ -6,7 +6,7 @@ ryhmat, aikavallit ja tilatarkennukset oikein.
 
 import re
 
-from varausmuunnin.parser import parse_dump, suodata
+from varausmuunnin.parser import EI_TILATARKENNUSTA, parse_dump, suodata
 
 
 def test_loytyy_kohteita(dump_teksti):
@@ -77,14 +77,14 @@ def test_suodata_case_insensitive(dump_teksti):
 def test_tilatarkennus_loytyyy(dump_teksti):
     """Osa varauksista sisaltaa tilatarkennuksen."""
     varaukset = parse_dump(dump_teksti)
-    tarkennukselliset = [v for v in varaukset if v.tilatarkennus != "ei-tilatarkennusta"]
+    tarkennukselliset = [v for v in varaukset if v.tilatarkennus != EI_TILATARKENNUSTA]
     assert len(tarkennukselliset) > 0
 
 
 def test_tilatarkennus_ei_tilatarkennusta(dump_teksti):
     """Osa varauksista on ilman tilatarkennusta."""
     varaukset = parse_dump(dump_teksti)
-    ilman = [v for v in varaukset if v.tilatarkennus == "ei-tilatarkennusta"]
+    ilman = [v for v in varaukset if v.tilatarkennus == EI_TILATARKENNUSTA]
     assert len(ilman) > 0
 
 
@@ -114,3 +114,9 @@ def test_sivunvaihto_ei_riko_parsintaa(dump_teksti):
     for v in varaukset:
         assert v.ryhma != "Vakiovaraukset"
         assert not re.match(r"^\d{2}\.\d{2}\.\d{4}$", v.ryhma)
+
+
+def test_roskateksti_ei_tuota_varauksia():
+    """Tuntematon teksti ei tuota varauksii."""
+    roska = "Tama on ihan random tekstia\njoka ei sisalla mittaan rakenteellista\n123 abc"
+    assert parse_dump(roska) == []

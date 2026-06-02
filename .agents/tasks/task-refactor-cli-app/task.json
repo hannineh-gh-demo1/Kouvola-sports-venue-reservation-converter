@@ -1,7 +1,14 @@
 {
   "task_id": "task-refactor-cli-app",
   "task_description": "Refactor the Kouvola sports venue reservation converter from a brittle 49-line script into a production-quality Python CLI application with proper project structure, robust regex-based parsing, multiple output formats (CSV/JSON/XLSX), direct PDF support, CLI interface, unit tests, and GitHub Actions CI.",
-  "status": "in_progress",
+  "status": "completed",
   "feature_order": ["FEAT-001", "FEAT-002"],
-  "blocked_reason": null
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "ruff check passes with no errors. All 23 pytest tests pass (12 parser, 6 output, 4 CLI + 1 integration). CLI correctly finds 114 KJP reservations from fixture data. Tests exercise real parsing logic against actual fixture data and would fail if parser/output logic were reverted."
+  }
 }

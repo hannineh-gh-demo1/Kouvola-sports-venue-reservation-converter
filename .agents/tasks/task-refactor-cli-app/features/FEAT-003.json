@@ -1,0 +1,29 @@
+{
+  "id": "FEAT-003",
+  "type": "fix",
+  "description": "Address code review feedback: handle output write errors in CLI, fix pdf_reader.py cleanup issues, preserve environment in subprocess tests, add garbage input test, extract sentinel constant.",
+  "status": "in_progress",
+  "steps": [
+    "Wrap output dispatch in cli.py with try/except OSError",
+    "Fix pdf_reader.py: remove noqa comment, replace __import__ hack, use newline join",
+    "Fix test_cli.py to preserve os.environ in subprocess calls",
+    "Add garbage input test to test_parser.py",
+    "Extract EI_TILATARKENNUSTA constant in parser.py and use in tests"
+  ],
+  "acceptance_criteria": [
+    "CLI handles OSError on output write with clean error message",
+    "pdf_reader.py uses proper import os and pathlib, no noqa comment",
+    "PDF pages joined with newline separator",
+    "Subprocess tests preserve full environment",
+    "Garbage input test passes",
+    "EI_TILATARKENNUSTA constant used in parser and tests",
+    "All existing tests still pass",
+    "ruff check passes"
+  ],
+  "verification": [
+    "eval \"$(pyenv init -)\" && pyenv global 3.11.15 && ruff check src/ tests/",
+    "eval \"$(pyenv init -)\" && pyenv global 3.11.15 && pytest tests/ -v"
+  ],
+  "blocked_reason": null,
+  "findings": null
+}
