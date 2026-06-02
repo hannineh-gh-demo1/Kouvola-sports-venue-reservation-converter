@@ -80,6 +80,16 @@ PDF-tuki toimii myos suoraan, mutta vaatii pdfplumber-kirjaston:
 varausmuunnin "Vakiovuorot kesa 2024.pdf" -s KJP -f csv
 ```
 
+## Vastuuvapauslauseke
+
+Tama tyokalu tarjotaan sellaisenaan ilman mittaan takuuta. Mie en vastaa
+mistaan virheista tai puutteista tulosteessa. Sie oot itte vastuussa siita
+etta tarkistat tulokset ja vertaat alkuperaseen PDF-tiedostoon enneku
+kaytat niita mihinkaan. Kouvolan kaupunki voi muuttaa PDF:n muottii
+milloin vaan, jolloin parseri ei valttamatta toimi oikein.
+
+Tarkista aina tuloste alkuperasta PDF:aa vasten!
+
 ## Kehitys
 
 ```bash
