@@ -2,7 +2,7 @@
   "task_id": "task-refactor-cli-app",
   "task_description": "Refactor the Kouvola sports venue reservation converter from a brittle 49-line script into a production-quality Python CLI application with proper project structure, robust regex-based parsing, multiple output formats (CSV/JSON/XLSX), direct PDF support, CLI interface, unit tests, and GitHub Actions CI.",
   "status": "completed",
-  "feature_order": ["FEAT-001", "FEAT-002"],
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
   "blocked_reason": null,
   "verification": {
     "build": "pass",
